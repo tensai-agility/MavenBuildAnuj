@@ -1,30 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simplilearn
+  name: my-app-deployment
   labels:
-    product: planview
+    app: my-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: planview
-      tier: web
+      app: my-app
   template:
     metadata:
       labels:
-        app: planview
-        tier: web
+        app: my-app
     spec:
       containers:
-      - name: bootcamp-container
-        image: jocatalin/kubernetes-bootcamp:v1
+      - name: my-app-container
+        image: hexadevops/spring:bhim
         ports:
         - containerPort: 8080
-        resources:
-          limits:  
-            cpu: 1000m
-            memory: 600Mi             
-          requests: 
-            cpu: 500m
-            memory: 300Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+  labels:
+    app: my-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: my-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
